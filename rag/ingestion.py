@@ -2,6 +2,8 @@ import json
 import os
 
 import pandas as pd
+from docx import Document
+from pypdf import PdfReader
 
 
 DATA_FOLDER = "data"
@@ -12,8 +14,10 @@ SUPPORTED_EXTENSIONS = {
     ".md",
     ".csv",
     ".json",
+    ".pdf",
+    ".docx",
+    ".xlsx",
 }
-
 
 def split_text_into_chunks(text):
     """
@@ -61,6 +65,73 @@ def load_csv_file(file_path):
 
     return "\n".join(lines)
 
+def load_pdf_file(file_path):
+    """
+    Loads a PDF file and extracts text from all pages.
+    """
+
+    reader = PdfReader(file_path)
+    pages_text = []
+
+    for page_number, page in enumerate(reader.pages, start=1):
+        text = page.extract_text()
+
+        if text:
+            pages_text.append(
+                f"Page {page_number}:\n{text.strip()}"
+            )
+
+    if not pages_text:
+        return "No readable text was found in this PDF."
+
+    return "\n\n".join(pages_text)
+
+
+def load_docx_file(file_path):
+    """
+    Loads a Word DOCX file and extracts text from paragraphs.
+    """
+
+    document = Document(file_path)
+
+    paragraphs = []
+
+    for paragraph in document.paragraphs:
+        text = paragraph.text.strip()
+
+        if text:
+            paragraphs.append(text)
+
+    if not paragraphs:
+        return "No readable text was found in this DOCX file."
+
+    return "\n\n".join(paragraphs)
+
+
+def load_xlsx_file(file_path):
+    """
+    Loads an Excel XLSX file and converts all sheets into readable text.
+    """
+
+    excel_file = pd.ExcelFile(file_path)
+
+    sheet_texts = []
+
+    for sheet_name in excel_file.sheet_names:
+        df = pd.read_excel(file_path, sheet_name=sheet_name)
+
+        lines = [
+            f"Excel sheet: {sheet_name}",
+            f"Rows: {len(df)}",
+            f"Columns: {', '.join(str(col) for col in df.columns)}",
+            "",
+            "Data preview:",
+            df.head(20).to_string(index=False),
+        ]
+
+        sheet_texts.append("\n".join(lines))
+
+    return "\n\n".join(sheet_texts)
 
 def load_json_file(file_path):
     """
@@ -75,7 +146,7 @@ def load_json_file(file_path):
 
 def extract_text_from_file(file_path):
     """
-    Detects file type by extension and extracts text.
+    Detects file type by extension and extracts readable text.
     """
 
     _, extension = os.path.splitext(file_path)
@@ -90,8 +161,16 @@ def extract_text_from_file(file_path):
     if extension == ".json":
         return load_json_file(file_path)
 
-    raise ValueError(f"Unsupported file type: {extension}")
+    if extension == ".pdf":
+        return load_pdf_file(file_path)
 
+    if extension == ".docx":
+        return load_docx_file(file_path)
+
+    if extension == ".xlsx":
+        return load_xlsx_file(file_path)
+
+    raise ValueError(f"Unsupported file type: {extension}")
 
 def load_documents(folder=DATA_FOLDER):
     """
