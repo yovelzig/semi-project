@@ -1,12 +1,8 @@
-from dotenv import load_dotenv
-load_dotenv()
-
 from rag.ingestion import load_documents
 from rag.embeddings import embed_texts_with_huggingface
 from rag.vector_store import create_faiss_index
 from rag.retrieval import retrieve
 from rag.llm import ask_gemini
-
 
 
 def main():
