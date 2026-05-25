@@ -1,0 +1,13 @@
+Networking FAQ
+
+What is DNS?
+DNS translates domain names into IP addresses.
+
+What is a VPN?
+VPN creates a secure encrypted connection.
+
+What is ping?
+Ping checks connectivity between hosts.
+
+What is localhost?
+localhost refers to 127.0.0.1

@@ -1,0 +1,20 @@
+Kubernetes Basics
+
+Pods:
+Smallest deployable unit in Kubernetes.
+
+Deployment:
+Manages replicas of pods.
+
+Service:
+Exposes pods internally or externally.
+
+Useful Commands:
+
+kubectl get pods
+
+kubectl describe pod <pod_name>
+
+kubectl logs <pod_name>
+
+kubectl delete pod <pod_name>

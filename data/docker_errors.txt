@@ -1,0 +1,30 @@
+Docker Common Errors
+
+Error: port is already allocated
+Cause:
+Another container is already using the port.
+
+Fix:
+Run:
+docker ps
+
+Then stop the conflicting container:
+docker stop <container_id>
+
+---
+
+Error: Cannot connect to the Docker daemon
+
+Cause:
+Docker Desktop is not running.
+
+Fix:
+Start Docker Desktop and verify:
+docker version
+
+---
+
+Error: no space left on device
+
+Fix:
+docker system prune -a

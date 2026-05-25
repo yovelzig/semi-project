@@ -1,0 +1,23 @@
+Flask Troubleshooting
+
+Error: Address already in use
+
+Cause:
+Another process is using port 5000.
+
+Fix:
+Windows:
+netstat -ano | findstr :5000
+
+Then:
+taskkill /PID <pid> /F
+
+---
+
+Error: ModuleNotFoundError
+
+Cause:
+Missing dependency.
+
+Fix:
+pip install -r requirements.txt
