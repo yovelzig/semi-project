@@ -7,12 +7,7 @@ from rag.llm import ask_gemini
 
 class RagService:
     """
-    Handles the full RAG flow:
-    1. Load documents
-    2. Create embeddings
-    3. Build FAISS index
-    4. Retrieve relevant chunks
-    5. Ask Gemini using retrieved context
+    Handles the full RAG flow.
     """
 
     def __init__(self):
@@ -29,14 +24,25 @@ class RagService:
         Receives a user question and returns an AI answer based on the documents.
         """
 
-        retrieved_chunks = retrieve(question, self.index, self.chunks)
+        retrieved_results = retrieve(question, self.index, self.chunks)
 
-        context = "\n".join(retrieved_chunks)
+        retrieved_chunks = [item["text"] for item in retrieved_results]
+
+        if not retrieved_chunks:
+            return {
+                "question": question,
+                "answer": "I do not have enough information in the documents to answer this question.",
+                "context": [],
+                "sources": []
+            }
+
+        context = "\n\n---\n\n".join(retrieved_chunks)
 
         answer = ask_gemini(context, question)
 
         return {
             "question": question,
             "answer": answer,
-            "context": retrieved_chunks
+            "context": retrieved_chunks,
+            "sources": retrieved_results
         }

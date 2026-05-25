@@ -1,26 +1,35 @@
 import os
 
-import nltk
-from nltk.tokenize import sent_tokenize
-
 
 DATA_FOLDER = "data"
 
 
-def setup_nltk():
+def split_text_into_chunks(text):
     """
-    Downloads the required NLTK tokenizer data.
+    Splits text into meaningful chunks.
+
+    The current project data is mostly FAQ / troubleshooting text.
+    Therefore, paragraph-based chunks are better than sentence-based chunks,
+    because a question and its answer should stay together.
     """
-    nltk.download("punkt", quiet=True)
-    nltk.download("punkt_tab", quiet=True)
+
+    raw_chunks = text.split("\n\n")
+
+    chunks = []
+
+    for chunk in raw_chunks:
+        cleaned_chunk = chunk.strip()
+
+        if cleaned_chunk:
+            chunks.append(cleaned_chunk)
+
+    return chunks
 
 
 def load_documents(folder=DATA_FOLDER):
     """
-    Loads .txt files from the data folder and splits them into sentence chunks.
+    Loads .txt files from the data folder and splits them into paragraph chunks.
     """
-
-    setup_nltk()
 
     if not os.path.exists(folder):
         raise FileNotFoundError(
@@ -38,13 +47,10 @@ def load_documents(folder=DATA_FOLDER):
         with open(file_path, "r", encoding="utf-8") as file:
             text = file.read()
 
-        sentences = sent_tokenize(text)
+        file_chunks = split_text_into_chunks(text)
 
-        for sentence in sentences:
-            sentence = sentence.strip()
-
-            if sentence:
-                chunks.append(sentence)
+        for chunk in file_chunks:
+            chunks.append(f"Source file: {file_name}\n\n{chunk}")
 
     if not chunks:
         raise ValueError(
