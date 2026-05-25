@@ -6,6 +6,9 @@ const answerSection = document.getElementById("answerSection");
 const answerBox = document.getElementById("answerBox");
 const contextSection = document.getElementById("contextSection");
 const contextBox = document.getElementById("contextBox");
+const fileInput = document.getElementById("fileInput");
+const uploadButton = document.getElementById("uploadButton");
+const uploadStatus = document.getElementById("uploadStatus");
 
 function setLoading(isLoading) {
     askButton.disabled = isLoading;
@@ -89,3 +92,42 @@ questionInput.addEventListener("keydown", function (event) {
         askQuestion();
     }
 });
+async function uploadFile() {
+    const file = fileInput.files[0];
+
+    uploadStatus.textContent = "";
+
+    if (!file) {
+        uploadStatus.textContent = "Please select a file first.";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    uploadButton.disabled = true;
+    uploadStatus.textContent = "Uploading and rebuilding index...";
+
+    try {
+        const response = await fetch("/upload", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            uploadStatus.textContent = data.error || "Upload failed.";
+            return;
+        }
+
+        uploadStatus.textContent = `Uploaded: ${data.filename}. Index rebuilt successfully.`;
+        fileInput.value = "";
+    } catch (error) {
+        uploadStatus.textContent = "Could not upload file.";
+    } finally {
+        uploadButton.disabled = false;
+    }
+}
+
+uploadButton.addEventListener("click", uploadFile);

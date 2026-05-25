@@ -12,7 +12,19 @@
             <p class="subtitle">
                 Ask questions based on the uploaded knowledge base documents.
             </p>
+<div class="upload-section">
+    <h2>Upload File</h2>
 
+    <input
+        type="file"
+        id="fileInput"
+        accept=".txt,.md,.csv,.json,.pdf,.docx,.xlsx"
+    >
+
+    <button id="uploadButton">Upload</button>
+
+    <div id="uploadStatus" class="upload-status"></div>
+</div>
             <div class="form-group">
                 <label for="questionInput">Your question</label>
                 <textarea

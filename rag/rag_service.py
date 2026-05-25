@@ -11,13 +11,25 @@ class RagService:
     """
 
     def __init__(self):
-        print("Initializing RAG service...")
+        self.chunks = []
+        self.embeddings = None
+        self.index = None
+
+        self.rebuild_index()
+
+    def rebuild_index(self):
+        """
+        Reloads all documents and rebuilds the FAISS index.
+        Use this after uploading new files.
+        """
+
+        print("Rebuilding RAG index...")
 
         self.chunks = load_documents()
         self.embeddings = embed_texts_with_huggingface(self.chunks)
         self.index = create_faiss_index(self.embeddings)
 
-        print("RAG service is ready.")
+        print("RAG index is ready.")
 
     def ask(self, question):
         """

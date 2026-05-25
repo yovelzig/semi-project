@@ -111,3 +111,25 @@ button:disabled {
 .hidden {
     display: none;
 }
+
+.upload-section {
+    margin-bottom: 28px;
+    padding: 18px;
+    background: #f9fafb;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.upload-section h2 {
+    margin-top: 0;
+}
+
+#fileInput {
+    margin-bottom: 12px;
+    display: block;
+}
+
+.upload-status {
+    margin-top: 12px;
+    color: #444;
+}
