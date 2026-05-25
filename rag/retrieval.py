@@ -1,17 +1,24 @@
+import faiss
 
-from embedding import embed_query_with_huggingface
+from rag.embeddings import embed_query_with_huggingface
+
 
 TOP_K = 3
 
+
 def retrieve(query, index, chunks, k=TOP_K):
     """
-    Converts query to Hugging Face embedding, then searches FAISS.
+    Converts query to Hugging Face embedding, normalizes it,
+    then searches FAISS for the most relevant chunks.
     """
+
     query_embedding = embed_query_with_huggingface(query)
 
-    distances, indexes = index.search(query_embedding, k)
+    faiss.normalize_L2(query_embedding)
 
-    print("\nFAISS distances:", distances)
+    scores, indexes = index.search(query_embedding, k)
+
+    print("\nFAISS scores:", scores)
     print("FAISS indexes:", indexes)
 
     results = []
@@ -21,4 +28,3 @@ def retrieve(query, index, chunks, k=TOP_K):
             results.append(chunks[idx])
 
     return results
-

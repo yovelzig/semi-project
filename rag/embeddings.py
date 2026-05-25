@@ -2,17 +2,11 @@ import os
 import sys
 import time
 import numpy as np
-from nltk.tokenize import sent_tokenize
-import nltk
-from google import genai
 from huggingface_hub import InferenceClient
 
 
-def setup_nltk():
-    nltk.download("punkt", quiet=True)
-    nltk.download("punkt_tab", quiet=True)
 
-DATA_FOLDER = "data"
+
 # Hugging Face embedding model running in the cloud
 HF_EMBEDDING_MODEL = "ibm-granite/granite-embedding-97m-multilingual-r2"
 
@@ -39,44 +33,6 @@ def create_huggingface_client():
 
 
 hf_client = create_huggingface_client()
-# ==========================
-# Load Documents
-# ==========================
-
-def load_documents(folder=DATA_FOLDER):
-    """
-    Loads .txt files and splits them into sentences.
-    We keep the original sentence text.
-    Do NOT remove stopwords here, because the LLM needs natural context.
-    """
-    if not os.path.exists(folder):
-        raise FileNotFoundError(
-            f"Folder '{folder}' does not exist. Create it and put .txt files inside."
-        )
-
-    chunks = []
-
-    for file_name in os.listdir(folder):
-        if file_name.endswith(".txt"):
-            file_path = os.path.join(folder, file_name)
-
-            with open(file_path, "r", encoding="utf-8") as file:
-                text = file.read()
-
-            sentences = sent_tokenize(text)
-
-            for sentence in sentences:
-                sentence = sentence.strip()
-                if sentence:
-                    chunks.append(sentence)
-
-    if not chunks:
-        raise ValueError(
-            f"No text found. Make sure '{folder}' contains .txt files with content."
-        )
-
-    print(f"Loaded {len(chunks)} text chunks.")
-    return chunks
 
 
 
