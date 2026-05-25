@@ -8,3 +8,4 @@ uploads/
 data/
 faiss_index/
 .vscode/
+database/rag_cache/
