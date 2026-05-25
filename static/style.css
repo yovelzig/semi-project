@@ -133,3 +133,25 @@ button:disabled {
     margin-top: 12px;
     color: #444;
 }
+
+.files-section {
+    margin-bottom: 28px;
+    padding: 18px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.files-section h2 {
+    margin-top: 0;
+}
+
+.files-list {
+    margin-top: 14px;
+    padding-left: 20px;
+}
+
+.files-list li {
+    margin-bottom: 6px;
+    color: #333;
+}

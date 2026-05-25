@@ -90,5 +90,19 @@ def upload_file():
         "filename": filename
     })
 
+@app.route("/files", methods=["GET"])
+def list_files():
+    files = []
+
+    for filename in os.listdir(app.config["UPLOAD_FOLDER"]):
+        file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+
+        if os.path.isfile(file_path) and allowed_file(filename):
+            files.append(filename)
+
+    return jsonify({
+        "files": files
+    })
+
 if __name__ == "__main__":
     app.run(debug=True)

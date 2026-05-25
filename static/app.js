@@ -9,6 +9,8 @@ const contextBox = document.getElementById("contextBox");
 const fileInput = document.getElementById("fileInput");
 const uploadButton = document.getElementById("uploadButton");
 const uploadStatus = document.getElementById("uploadStatus");
+const refreshFilesButton = document.getElementById("refreshFilesButton");
+const filesList = document.getElementById("filesList");
 
 function setLoading(isLoading) {
     askButton.disabled = isLoading;
@@ -85,6 +87,39 @@ async function askQuestion() {
     }
 }
 
+async function loadFiles() {
+    filesList.innerHTML = "";
+
+    try {
+        const response = await fetch("/files");
+        const data = await response.json();
+
+        if (!response.ok) {
+            const li = document.createElement("li");
+            li.textContent = "Could not load files.";
+            filesList.appendChild(li);
+            return;
+        }
+
+        if (!data.files || data.files.length === 0) {
+            const li = document.createElement("li");
+            li.textContent = "No files loaded yet.";
+            filesList.appendChild(li);
+            return;
+        }
+
+        data.files.forEach((filename) => {
+            const li = document.createElement("li");
+            li.textContent = filename;
+            filesList.appendChild(li);
+        });
+    } catch (error) {
+        const li = document.createElement("li");
+        li.textContent = "Could not connect to the server.";
+        filesList.appendChild(li);
+    }
+}
+
 askButton.addEventListener("click", askQuestion);
 
 questionInput.addEventListener("keydown", function (event) {
@@ -123,6 +158,7 @@ async function uploadFile() {
 
         uploadStatus.textContent = `Uploaded: ${data.filename}. Index rebuilt successfully.`;
         fileInput.value = "";
+        await loadFiles();
     } catch (error) {
         uploadStatus.textContent = "Could not upload file.";
     } finally {
@@ -131,3 +167,6 @@ async function uploadFile() {
 }
 
 uploadButton.addEventListener("click", uploadFile);
+refreshFilesButton.addEventListener("click", loadFiles);
+
+document.addEventListener("DOMContentLoaded", loadFiles);
