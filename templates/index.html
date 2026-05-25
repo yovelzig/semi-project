@@ -3,12 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>AI RAG Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>AI RAG Assistant</h1>
+    <div class="page">
+        <div class="card">
+            <h1>AI RAG Assistant</h1>
+            <p class="subtitle">
+                Ask questions based on the uploaded knowledge base documents.
+            </p>
 
-    <p>The Flask app is running.</p>
+            <div class="form-group">
+                <label for="questionInput">Your question</label>
+                <textarea
+                    id="questionInput"
+                    placeholder="Example: What does DNS do?"
+                    rows="4"
+                ></textarea>
+            </div>
 
-    <p>Use the /ask endpoint to ask document-based questions.</p>
+            <button id="askButton">Ask</button>
+
+            <div id="loading" class="loading hidden">
+                Thinking...
+            </div>
+
+            <div id="errorBox" class="error hidden"></div>
+
+            <div id="answerSection" class="section hidden">
+                <h2>Answer</h2>
+                <div id="answerBox" class="answer"></div>
+            </div>
+
+            <div id="contextSection" class="section hidden">
+                <h2>Retrieved Context</h2>
+                <div id="contextBox"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
